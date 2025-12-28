@@ -1,0 +1,823 @@
+\documentclass{report}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\setcounter{secnumdepth}{3}
+
+\renewcommand{\thechapter}{\arabic{chapter}}
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+\renewcommand{\thesubsubsection}{\thesubsection.\arabic{subsubsection}}
+
+\makeatletter
+\@addtoreset{section}{chapter}
+\@addtoreset{subsection}{section}
+\@addtoreset{subsubsection}{subsection}
+\makeatother
+
+\begin{document}
+
+\begin{titlepage}
+    \centering
+    \vspace*{3cm}
+
+    {\Huge Bayesian Techniques in Macroeconomics\par}
+    \vspace{1.5cm}
+
+    {\Large Final Project\par}
+    \vspace{3cm}
+
+    {\large
+    Gabriele Piantoni\par
+    \vspace{0.5cm}
+    Université Paris Dauphine - M2 QEA\par
+    \vspace{0.5cm}
+    \today
+    }
+
+    \vfill
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+
+
+\chapter{Solving the Two-Agent Heterogeneous Household Model}
+
+\section{Households}
+
+\subsection{Hand-to-Mouth Household (SP)}
+
+The SP household maximizes:
+\begin{equation}
+\max_{\{C_{SP,t}\}} \sum_{t=0}^{\infty} \beta^t \log(C_{SP,t}),
+\end{equation}
+subject to the period-by-period budget constraint:
+\begin{equation}
+C_{SP,t} = w_t l_{SP,t} - T_{SP,t}.
+\end{equation}
+Since labor is inelastic and set to $l_{SP,t} = \frac{1}{3}$, consumption for SP household is determined residually as:
+\begin{equation}
+C_{SP,t} = \frac{w_t}{3} - T_{SP,t}.
+\label{eq:SA_FOC_c}
+\end{equation}
+
+\subsection{Saver Household (SA)}
+
+The representative wealthy household chooses consumption, bond holdings, investment, and next period capital by solving:
+\begin{equation}
+\max_{\{C_{SA,t}, B_{t+1}, I_t, K_{t+1}\}}
+\sum_{t=0}^{\infty} \beta^t \log(C_{SA,t}),
+\end{equation}
+subject to the budget constraint:
+\begin{equation}
+C_{SA,t} + B_{t+1} + I_t
+= r_t B_t + r^K_t K_t + w_t l_{SA,t} - T_{SA,t},
+\end{equation}
+and the law of motion for capital:
+\begin{equation}
+K_{t+1} = (1-\delta) K_t + I_t.
+\end{equation}
+Labor is also inelastic and set at $l_{SA,t} = \frac{1}{3}$.
+\smallskip
+\\The household's Lagrangian is:
+\begin{equation}
+\mathcal{L} =
+\sum_{t=0}^{\infty} \beta^t
+\Big[
+\log(C_{SA,t})
++ \Lambda_t \big( r_t B_t + r^K_t K_t + w_t l_{SA,t} - T_{SA,t}
+- C_{SA,t} - B_{t+1} - I_t \big)
++ Q_t \big( (1-\delta) K_t + I_t - K_{t+1} \big)
+\Big],
+\end{equation}
+where $\Lambda_t$ is the multiplier on the budget constraint and $q_t$ is the shadow value of installed capital.
+\smallskip
+\\Consequently, the first-order coditions (FOC) are as follows.
+\begin{enumerate}
+
+\item \text{Consumption}
+\begin{equation}
+\frac{\partial \mathcal{L}}{\partial C_{SA,t}} = 0
+\quad \Rightarrow \quad
+\frac{1}{C_{SA,t}} = \Lambda_t .
+\label{eq:FOC_c}
+\end{equation}
+
+\item \text{Bonds}
+\begin{equation}
+\frac{\partial \mathcal{L}}{\partial B_{t+1}} = 0
+\quad \Rightarrow \quad
+\Lambda_t = \beta r_{t+1} \, \mathbb{E}_t\!\left[\Lambda_{t+1}\right].
+\end{equation}
+
+\item \text{Investment}
+\begin{equation}
+\frac{\partial \mathcal{L}}{\partial I_t} = 0
+\quad \Rightarrow \quad
+-\Lambda_t + Q_t = 0
+\quad \Rightarrow \quad
+Q_t = \Lambda_t .
+\label{eq:FOC_I}
+\end{equation}
+
+\item \text{Capital}
+\begin{equation}
+\frac{\partial \mathcal{L}}{\partial K_{t+1}} = 0
+\quad \Rightarrow \quad
+Q_t = \beta \, \mathbb{E}_t \!\left[
+Q_{t+1}\big( r^K_{t+1} + 1 - \delta \big)
+\right].
+\label{eq:FOC_K5}
+\end{equation}
+
+\end{enumerate}
+Considering \eqref{eq:FOC_c}, \eqref{eq:FOC_I} and \eqref{eq:FOC_K5}, we obtain the standard Euler equation:
+\begin{equation}
+1 = \beta \, \mathbb{E}_t \left[
+\frac{C_{SA,t}}{C_{SA,t+1}} \big( r^K_{t+1} + 1 - \delta \big)
+\right].
+\end{equation}
+
+\section{Firm's Problem}
+
+The representative firm rents labor and capital in competitive factor markets and produces output according to the production function:
+\begin{equation}
+Y_t = A_t K_t^{\alpha} L_t^{\,1-\alpha},
+\end{equation}
+where total factor productivity follows:
+\begin{equation}
+\log(A_t) = \rho_A \log(A_{t-1}) + \eta_t,
+\end{equation}
+with $\eta_t \sim \mathcal{N}(0,\sigma_A^2)$.
+\smallskip
+\\Period-$t$ profits are defined as:
+\begin{equation}
+d_t = Y_t - w_t L_t - r^K_t K_t,
+\end{equation}
+where $w_t$ is the wage and $r^K_t$ is the rental rate of capital.
+\smallskip
+\\The firm maximizes the discounted stream of profits, using the saver household’s marginal utility as the appropriate stochastic discount factor:
+\begin{equation}
+\max_{\{L_t, K_t, Y_t\}} 
+\sum_{t=0}^{\infty} 
+\beta^t \frac{\lambda_t}{\lambda_0} d_t,
+\end{equation}
+subject to the technological constraint:
+\begin{equation}
+Y_t = A_t K_t^{\alpha} L_t^{1-\alpha}.
+\end{equation}
+The Lagrangian of the firm’s problem is:
+\begin{equation}
+\mathcal{L} =
+\sum_{t=0}^{\infty}
+\beta^t \frac{\lambda_t}{\lambda_0}
+\Big[
+Y_t - w_t L_t - r^K_t K_t
++ \mu_t \big( A_t K_t^{\alpha} L_t^{1-\alpha} - Y_t \big)
+\Big],
+\end{equation}
+where $\mu_t$ is the multiplier associated with the production function.
+\smallskip
+Consequently, the first-order conditions (FOC) are defined as follows.
+\begin{enumerate}
+
+\item \text{Output}
+\begin{equation}
+\frac{\partial \mathcal{L}}{\partial Y_t} = 0
+\quad \Rightarrow \quad
+1 - \mu_t = 0
+\quad \Rightarrow \quad
+\mu_t = 1 .
+\end{equation}
+
+\item \text{Labor}
+\begin{equation}
+\frac{\partial \mathcal{L}}{\partial L_t} = 0
+\quad \Rightarrow \quad
+-w_t + \mu_t (1-\alpha) A_t K_t^{\alpha} L_t^{-\alpha} = 0
+\quad \Rightarrow \quad
+w_t = (1-\alpha)\frac{Y_t}{L_t} .
+\end{equation}
+
+\item \text{Capital}
+\begin{equation}
+\frac{\partial \mathcal{L}}{\partial K_t} = 0
+\quad \Rightarrow \quad
+-r^K_t + \mu_t \alpha A_t K_t^{\alpha-1} L_t^{1-\alpha} = 0
+\quad \Rightarrow \quad
+r^K_t = \alpha \frac{Y_t}{K_t} .
+\end{equation}
+
+\end{enumerate}
+
+\section{Government}
+The government finances public spending using taxes:
+\begin{equation}
+G_t = T_t.
+\end{equation}
+and the public spending is set as a fixed proportion og GDP (20\%):
+\begin{equation}
+G_t = 0.2 \, Y_t.
+\end{equation}
+\section{Aggregation and Market Clearing}
+
+\begin{enumerate}
+
+\item \text{Aggregate consumption}
+\begin{equation}
+C_t = \omega C_{SP,t} + (1 - \omega) C_{SA,t}.
+\end{equation}
+
+\item \text{Aggregate taxes}
+\begin{equation}
+T_t = \omega T_{SP,t} + (1 - \omega) T_{SA,t},
+\qquad \text{with} \qquad
+T_t = T_{SP,t}.
+\end{equation}
+
+\item \text{Aggregate labor (with trend growth $\Gamma_t$)}
+\begin{equation}
+L_t = \omega L_t^{SP} + (1 - \omega) L_t^{SA}
+= \Gamma_t \left( {\omega}{\ell} + ({1-\omega}){\ell} \right)
+= {\Gamma_t}\ell.
+\end{equation}
+
+\item \text{Bond market clearing}
+\begin{equation}
+B_t = 0.
+\end{equation}
+
+\end{enumerate}
+
+\chapter{Detrended Model and Steady State}
+
+To obtain a stationary representation of the economy, we remove the deterministic growth trend $\Gamma_t$, defined as:
+\begin{equation}
+\Gamma_t = \gamma_y \Gamma_{t-1},
+\qquad \gamma_y > 1.
+\end{equation}
+Subsequently, it will be possible to define the steady state of the model.
+\section{Detrending}
+For any variable in levels $X_t$, the corresponding stationary variable is:
+\begin{equation}
+x_t = \frac{X_t}{\Gamma_t}.
+\end{equation}
+\subsection{Households}
+
+\subsubsection{Hand-to-Mouth Household (SP)}
+
+In levels, SP consumption is:
+\begin{equation*}
+C_{SP,t} = {w_t} \ell- T_{SP,t}.
+\end{equation*}
+Dividing by $\Gamma_t$ yields the stationary equation:
+\begin{equation}
+c_{SP,t} = {w_t^s} \ell - t_{SP,t}.
+\end{equation}
+
+\subsubsection{Saver Household (SA): Stationary Constraints}
+
+The SA household's budget constraint in levels is:
+\begin{equation*}
+C_{SA,t} + B_{t+1} + I_t
+= r_t B_t + r^K_t K_t + w_t \ell - T_{SA,t}.
+\end{equation*}
+which in stationary terms become
+\begin{equation}
+c_{SA,t} + \gamma_y b_{t+1} + i_t
+= r_t b_t + r^K_t k_t + w_t^s \ell - t_{SA,t},
+\end{equation}
+Capital accumulation in levels is:
+\begin{equation*}
+K_{t+1} = (1-\delta)K_t + I_t.
+\end{equation*}
+which in stationary terms become
+\begin{equation}
+k_{t+1} = \gamma_y^{-1}(1-\delta)k_t + \gamma_y^{-1} i_t.
+\end{equation}
+Consequently, the first-order conditions are as follows.
+\begin{enumerate}
+
+\item \text{Consumption}
+\begin{equation}
+\lambda_t = \frac{1}{c_{SA,t}}.
+\end{equation}
+
+\item \text{Bonds}
+\begin{equation}
+\lambda_t \gamma_y
+=
+\beta r_{t+1} \, \mathbb{E}_t\!\left[\lambda_{t+1}\right].
+\end{equation}
+
+\item \text{Investment}
+\begin{equation}
+q_t = \gamma_y \lambda_t.
+\end{equation}
+
+\item \text{Capital}
+\begin{equation}
+q_t
+=
+\beta \, \mathbb{E}_t \!\left[
+\lambda_{t+1} r^K_{t+1}
++
+q_{t+1} (1 - \delta)\gamma_y^{-1}
+\right].
+\end{equation}
+
+\end{enumerate}
+Hence, we obtain the stationary version of the Euler condition:
+\begin{equation}
+1 = \frac{\beta}{\gamma_y}\, \mathbb{E}_t 
+\left[
+\frac{c_{SA,t}}{c_{SA,t+1}}
+\left( r^K_{t+1} + (1 - \delta) \right)
+\right].
+\end{equation}
+
+\subsection{Firms}
+
+The representative firm produces output using capital and labor according to the Cobb--Douglas production function:
+\begin{equation*}
+Y_t = A_t K_t^{\alpha} L_t^{1-\alpha}.
+\end{equation*}
+Aggregate labor grows at the deterministic trend:
+\begin{equation*}
+L_t = \Gamma_t \, \ell,
+\qquad \ell = \frac{1}{3}.
+\end{equation*}
+Dividing output by $\Gamma_t$ yields the stationary production function:
+\begin{equation}
+y_t = A_t k_t^{\alpha} \ell^{\,1-\alpha}.
+\end{equation}
+The TFP process does not require detrending and follows
+\begin{equation*}
+\log A_t = \rho_A \log A_{t-1} + \eta_t.
+\end{equation*}
+Consequently, the first-order conditions are as follows.
+\begin{enumerate}
+\item \text{Capital}
+\begin{equation}
+r^K_t = \alpha \frac{y_t}{k_t}.
+\end{equation}
+
+\item \text{Labor}
+\begin{equation}
+w_t^s = (1-\alpha)\frac{y_t}{\ell}.
+\end{equation}
+\end{enumerate}
+\subsection{Government}
+In stationarity public spending becomes
+\begin{equation}
+g_t = 0.2 y_t.
+\end{equation}
+while the budget constraint is
+\begin{equation}
+g_t = t_t.
+\end{equation}
+
+\subsection{Aggregation}
+
+\begin{enumerate}
+\item Aggregate consumption:
+\begin{equation}
+c_t = \omega c_{SP,t} + (1-\omega) c_{SA,t}.
+\end{equation}
+
+\item Aggregate taxes:
+\begin{equation}
+t_t = \omega t_{SP,t} + (1-\omega)t_{SA,t}.
+\end{equation}
+
+\item Bond market clearing:
+\begin{equation}
+b_t = 0.
+\end{equation}
+\end{enumerate}
+
+\section{Derivation of the Stationary Steady State}
+
+Once the stationary detrended version of the model is obtained, the steady state can be defined.
+\smallskip
+\\The exogenous technology shock is set to its mean value,
+\begin{equation}
+A = 1 .
+\end{equation}
+The production function at the steady-state is 
+\begin{equation}
+y = k^{\alpha} \ell^{1-\alpha}.
+\end{equation}
+The Euler equation of the saver household in the detrended economy is
+\begin{equation}
+1 = \frac{\beta}{\gamma_y} \frac{c_{SA,t}}{c_{SA,t+1}}
+\left(
+r^K_{t+1} + 1-\delta
+\right).
+\end{equation}
+which in the stationary steady state reduces to
+\begin{equation}
+1 = \frac{\beta}{\gamma_y}\left( r^K + 1-\delta \right).
+\end{equation}
+Hence, the steady-state rental rate of capital is
+\begin{equation}
+r^K = \frac{\gamma_y}{\beta} - (1-\delta).
+\end{equation}
+Using the definition of the rental rate ($r^K = \alpha \frac{y}{k}$) and substituting the production function at the SS ($y = k^{\alpha} \ell^{1-\alpha}$) yields
+\begin{equation}
+r^K = \alpha k^{\alpha-1} \ell^{1-\alpha}
+\quad \Rightarrow \quad
+k =
+\left(
+\frac{\alpha \ell^{1-\alpha}}{r^K}
+\right)^{\frac{1}{1-\alpha}}.
+\end{equation}
+The detrended law of motion for capital at the SS ($k = \frac{1-\delta}{\gamma_y}k + \frac{i}{\gamma_y}$) leads to the steady-state investment defined by
+\begin{equation}
+i = \left( \gamma_y - (1-\delta) \right) k.
+\end{equation}
+Government spending is a fixed share of output,
+\begin{equation}
+g = 0.2\, y,
+\end{equation}
+and lump-sum taxes satisfy
+\begin{equation}
+t = g.
+\end{equation}
+The consumption of hand-to-mouth households is given by
+\begin{equation}
+c_{SP} = {w}\ell - t.
+\end{equation}
+Considering aggregate consumption ($c = y - i - g$ and $c = \omega c_{SP} + (1-\omega)c_{SA}$)
+the consumption of saver households is obtained as
+\begin{equation}
+c_{SA} = \frac{c - \omega c_{SP}}{1-\omega}.
+\end{equation}
+This system of equations fully characterizes the stationary steady state of the detrended economy.
+\chapter{Model Results}
+The results are generated within the model described in the previous chapter, using the following calibrated parameter values:
+\begin{equation*}
+\beta = 0.96, \quad
+\delta = 0.06, \quad
+\alpha = 0.33, \quad
+\omega = 0.30, \quad
+\ell = \tfrac{1}{3}, \quad
+\gamma_y = 1.02, \quad
+\rho_A = 0.9, \quad
+\sigma_A = 0.01 .
+\end{equation*}
+\section{The Steady-State}
+Before analyzing the results related to the impulse response functions, it is useful to report the deterministic steady-state values of the main endogenous variables implied by the model calibration:
+\begin{equation*}
+\begin{aligned}
+c^{SP} &= 0.255243, \\
+c^{SA} &= 0.344066, \\
+c      &= 0.317419, \\
+y      &= 0.54307, \\
+k      &= 1.46296, \\
+i      &= 0.117037, \\
+w      &= 1.09157, \\
+r^K    &= 0.1225, \\
+\lambda &= 2.90642, \\
+g      &= 0.108614, \\
+t      &= 0.108614, \\
+A      &= 1 .
+\end{aligned}
+\end{equation*}
+These values characterize the non-stochastic steady state around which the model is log-linearized and provide the reference point for interpreting the dynamic responses to productivity shocks
+\section{Impulse Response to Orthogonal productivity Schock ($\epsilon_t^A$)}
+The impulse response functions presented in Figure \ref{fig:M1} are computed for a single, one-time positive shock to total factor productivity $A$ of size $0.01$.
+\subsection{Productivity}
+
+Productivity follows an AR(1) process. With the persistence parameter fixed at $\rho_A = 0.9$, an immediate positive innovation $\varepsilon_t^A = 0.01$ generates a jump in productivity on impact. Thereafter, productivity converges smoothly back to its steady-state level, decaying at rate $\rho_A$ each period. This high degree of persistence plays a central role in shaping the dynamic responses of all endogenous variables, as the effects of the initial shock propagate gradually through the economy.
+\subsection{Output}
+
+Output is produced according to
+\begin{equation*}
+y_t = A_t k_{t-1}^{\alpha} \ell^{1-\alpha} .
+\end{equation*}
+On impact, both the capital stock entering production, $k_{t-1}$, and labor, $\ell$, are fixed. As a result, the initial response of output is driven exclusively by the productivity shock. In level terms, the impact change in output corresponds to the steady-state level of output multiplied by the size of the productivity innovation, that is $\varepsilon_t^A \times \bar{y}$, where $\bar{y} = 0.543$.
+\smallskip
+\\In subsequent periods, as investment rises in response to higher expected returns, capital begins to accumulate. This gradual increase in the capital stock sustains output above its steady-state level even as productivity reverts toward its mean, generating a smooth and persistent impulse response.
+
+
+
+\subsection{Government spending and taxes}
+
+Government spending is defined as a constant share of output,
+\begin{equation*}
+g_t = 0.2\, y_t .
+\end{equation*}
+Consequently, government spending mirrors the behavior of output exactly.
+\medskip
+Taxes are lump-sum and balanced period by period,
+\begin{equation*}
+t_t = g_t .
+\end{equation*}
+Hence, taxes inherit the same dynamics as government spending and output, with no independent adjustment.
+\subsection{Wages}
+
+Wages are equal to the marginal product of labor,
+\begin{equation*}
+w_t = (1-\alpha)\frac{y_t}{\ell} .
+\end{equation*}
+Since labor supply is fixed at $\ell = 1/3$, wages are proportional to output at all times. On impact, a positive productivity shock raises output, which immediately translates into higher wages. In subsequent periods, as capital accumulates in response to the initial increase in productivity, output remains above its steady-state level even while productivity gradually declines. As a result, wages inherit the same persistence as output, with their dynamic path driven first by the productivity shock and later by capital accumulation.
+
+\subsection{Return on Capital}
+
+The rental rate of capital is given by
+\begin{equation*}
+rK_t = \alpha \frac{y_t}{k_{t-1}} .
+\end{equation*}
+On impact, output increases while the capital stock entering production, $k_{t-1}$, is fixed. This leads to an immediate rise in the return on capital. In level terms, the initial change in $rK_t$ is proportional to the steady-state return on capital, with the impact response approximately equal to $\varepsilon_t^A \times \bar{r}^K$, where $\bar{r}^K \simeq 0.122$.
+\smallskip
+\\As capital gradually accumulates in response to higher investment, the capital--output ratio increases and the marginal product of capital declines. Consequently, the return on capital falls over time and may temporarily undershoot its steady-state level when expressed in deviations from steady state.
+
+\subsection{Consumption of Hand-to-Mouth Households}
+
+Hand-to-mouth households consume their current net income,
+\begin{equation*}
+c^{SP}_t = w_t \ell - t_t .
+\end{equation*}
+Because both wages and taxes move proportionally with output, the consumption of hand-to-mouth households increases immediately following the productivity shock. As output gradually returns toward its steady-state level, consumption declines monotonically, closely tracking the dynamics of income. Since these households do not have access to intertemporal saving or borrowing, consumption exhibits no smoothing and responds one-for-one to contemporaneous income fluctuations.
+
+
+\subsection{Consumption of Optimizing Households}
+
+Optimizing households satisfy
+\begin{equation*}
+\lambda_t = \frac{1}{cSA_t}
+\end{equation*}
+and the Euler equation
+\begin{equation*}
+\lambda_t = \beta \mathbb{E}_t\!\left[ \lambda_{t+1}\left( rK_{t+1} + 1 - \delta \right) \right].
+\end{equation*}
+Following a positive productivity shock, higher expected returns induce households to invest more, temporarily restraining consumption. As accumulated capital raises income in later periods, consumption increases, generating a hump-shaped response before converging back to steady state.
+
+\subsection{Aggregate Consumption}
+
+Aggregate consumption is a weighted average of the two household types,
+\begin{equation*}
+c_t = \omega cSP_t + (1-\omega) cSA_t .
+\end{equation*}
+Its dynamics combine the immediate response of hand-to-mouth households with the smoother, hump-shaped response of optimizing households.
+
+\subsection{Capital}
+
+Capital evolves according to
+\begin{equation*}
+k_t = (1-\delta)k_{t-1} + i_t .
+\end{equation*}
+Capital is predetermined in the sense that production at time $t$ depends on $k_{t-1}$, which is fixed when the productivity shock occurs. Therefore, the capital stock used in production does not react on impact to the shock.
+\smallskip
+\\However, it is important to note that, with this timing convention, $k_t$ represents the end-of-period capital stock. Since investment $i_t$ responds immediately to the productivity shock, $k_t$ also displays an immediate response in the impulse response functions. This contemporaneous movement does not imply that capital affects output on impact; rather, it reflects the accounting identity through which higher investment today translates into a larger capital stock available for production in the following period. As a result, capital exhibits a gradual and persistent adjustment path, typically displaying a hump-shaped response that fades as productivity returns to its steady state.
+
+\subsection{Investment}
+
+Investment is determined by the resource constraint,
+\begin{equation*}
+i_t = y_t - c_t - g_t .
+\end{equation*}
+Since output rises strongly on impact while consumption and government spending adjust more gradually, investment increases sharply. As productivity and returns decline, investment falls back quickly toward steady state.
+
+\subsection{Marginal Utility}
+
+The marginal utility of consumption satisfies
+\begin{equation*}
+\lambda_t = \frac{1}{cSA_t} .
+\end{equation*}
+Its impulse response is the mirror image of optimizing households' consumption: it decreases when consumption rises and increases when consumption falls, displaying a U-shaped pattern consistent with the hump-shaped response of $cSA_t$.
+\chapter{SMM Estimation}
+\section{Data}
+
+For the SMM estimation, we use four U.S. macroeconomic time series from the
+Federal Reserve Economic Data (FRED) database.
+All series are observed at quarterly frequency over the sample
+$1965\text{Q}1$--$2019\text{Q}2$.
+
+\begin{itemize}
+
+\item \textbf{Short-term interest rate.}  
+The 3-Month Treasury Bill Secondary Market Rate (discount basis), denoted by
+$i_t$.  
+This series is an annualized nominal interest rate expressed in percentage
+points.  
+The interest rate used in the analysis is therefore defined as
+\begin{equation*}
+r_t = \frac{i_t}{100}.
+\end{equation*}
+
+\item \textbf{Real output.}  
+Real Gross Domestic Product, measured in chained 2017 dollars.
+
+\item \textbf{Real consumption.}  
+Personal Consumption is constructed using Personal Consumption Expenditures
+(PCE), which measures nominal household consumption expenditures, and the
+Personal Consumption Expenditures Chain-Type Price Index (PCEPI), used to
+deflate nominal consumption.
+
+\end{itemize}
+Looking at Figure~\ref{fig:data3}, we plot the output growth rate \( g_y \),
+the consumption growth rate \( g_c \), and the net interest rate \( r \).
+It is immediately apparent that both \( g_y \) and \( g_c \) display a positive
+deterministic component, as their sample averages are strictly greater than zero.
+This provides a simple visual indication of the presence of trend growth in
+output and consumption. This feature will be particularly relevant for the
+subsequent analysis, where the model explicitly accounts for deterministic
+growth through detrending.
+\section{The Estimation}
+
+The SMM estimation is based on five moments targeting five structural parameters of the model.
+Specifically, we estimate the discount factor \( \beta \), the trend growth rate of the economy
+\( \gamma_y \), the persistence of the TFP shock \( \rho_A \), the share of hand-to-mouth households
+\( \omega \), and the standard deviation of the TFP innovation \( \sigma_A \).
+The set of moments includes the mean and the variance of output and consumption growth rates,
+\( E(g_y) \), \( E(g_c) \), \( \mathrm{Var}(g_y) \), and \( \mathrm{Var}(g_c) \), together with the
+mean interest rate \( E(r) \).
+\smallskip
+\\To conduct the estimation, two alternative approaches can be considered.
+\smallskip
+\\ \emph{For the sake of this project both procedure has been used}
+\smallskip
+\begin{enumerate}
+\item Detrend the data prior to estimation and recover the trend growth rate
+\( \gamma_y \) directly from the detrending procedure. In this case, the growth rates of output
+and consumption are defined as stationary log-differences,
+\[
+g_{y,t} = \log y_t - \log y_{t-1},
+\qquad
+g_{c,t} = \log c_t - \log c_{t-1},
+\]
+implying \( E(g_y) = E(g_c) = 0 \). The SMM estimation then targets only the remaining structural
+parameters, such as \( \beta \), \( \rho_A \), \( \omega \), and \( \sigma_A \).
+
+\item The data are not detrended
+ex ante. Instead, the trend growth rate \( \gamma_y \) is explicitly included among the parameters
+to be estimated within SMM. The model is modified while preserving its standard stationary
+representation by introducing a deterministic growth component. Output and consumption growth
+rates are therefore defined as
+\begin{equation}
+g_{y,t} = \log(\gamma_y) + \log y_t - \log y_{t-1},
+\end{equation}
+\begin{equation}
+g_{c,t} = \log(\gamma_y) + \log c_t - \log c_{t-1},
+\end{equation}
+so that, in the stationary steady state,
+\begin{equation}
+g_y = \log(\gamma_y), \qquad g_c = \log(\gamma_y).
+\end{equation}
+This formulation allows the model to remain stationary in detrended variables, while at the same
+time being consistent with the positive average growth rates observed in the data. Conceptually,
+detrending is performed within the model rather than imposed directly on the data, which ensures
+the identification of the trend growth parameter \( \gamma_y \) within the SMM framework.
+\end{enumerate}
+\section{Results}
+Here we report only the results related to the second strategy, namely detrending within SMM, while the Dynare code also implements the alternative approach based on ex-ante detrending.
+\smallskip
+\\The estimated parameters are reported below:
+\begin{center}
+\begin{tabular}{lccc}
+\hline
+Parameter & Estimate & s.d. & t-stat \\
+\hline
+$\beta$      & 0.9959 & 0.0119 & 83.9324 \\
+$\gamma_y$   & 1.0073 & 0.0372 & 27.0938 \\
+$\rho_A$     & 0.9382 & 118.3154 & 0.0079 \\
+$\omega$     & 0.8497 & 24.2616 & 0.0350 \\
+\hline
+\end{tabular}
+\end{center}
+The estimated standard deviation of the technology shock is
+\[
+\sigma_{\varepsilon_A} = 0.0079 \quad (0.0290).
+\]
+The value of the minimized SMM objective function is
+\[
+F = 0.013142.
+\]
+Finally, the comparison between data moments and model-implied moments shows a close
+match:
+\begin{center}
+\begin{tabular}{lcc}
+\hline
+Moment & Data & Model \\
+\hline
+$E[g_y]$      & 0.0071747 & 0.0072977 \\
+$E[g_c]$      & 0.0077089 & 0.0072953 \\
+$E[g_y^2]$    & 0.0001142 & 0.0001131 \\
+$E[g_c^2]$    & 0.0001014 & 0.0000953 \\
+$E[r]$        & 0.0117448 & 0.0114170 \\
+\hline
+\end{tabular}
+\end{center}
+Overall, introducing explicit trend growth into the model resolves the inconsistency
+between data and theory and leads to economically meaningful parameter estimates.
+\smallskip
+The minimum-check plots provide useful diagnostic evidence on the identification of the structural parameters in the SMM estimation. As shown in Figure \ref{fig:minn}, the objective function displays a well-defined interior minimum for the standard deviation of the technology shock and for the parameter $\omega$, indicating that these parameters are effectively identified by the chosen set of moments. By contrast, the criterion function is essentially flat with respect to $\beta$, implying a lack of identification, as variations in the discount factor do not materially affect the simulated moments. A similar issue arises for the persistence parameter $\rho_A$, for which the objective function is only weakly curved and reaches its minimum close to the boundary of the admissible parameter space, pointing to weak identification. Finally, the profile associated with the trend growth parameter $\gamma_y$ exhibits a steep and highly non-linear shape, suggesting that its value is largely pinned down by the normalization implicit in the detrending procedure rather than by genuine information contained in the matched moments.
+\chapter{Bayesian Estimation}
+In this section we turn to Bayesian estimation of the model. 
+\section{Data}
+In this estimation, we rely on the same U.S. dataset employed in the SMM analysis, ensuring full consistency across estimation methods. The data treatment, variable definitions, and sample period are therefore identical, so that differences in the results can be attributed solely to the estimation approach rather than to alternative data transformations or sample choices.
+\section{Estimation}
+In line with the theoretical framework developed above, which features deterministic trend growth, the estimation is conducted using detrended data, so as to focus exclusively on the stationary components of the real variables. The observed variables are therefore defined as the cyclical components of log output and log consumption, denoted by $g_y$ and $g_c$, which correspond to the stationary counterparts of the model variables and satisfy $\mathbb{E}(g_y)=\mathbb{E}(g_c)=0$ by construction.
+\smallskip
+\\The empirical detrending procedure mirrors the theoretical decomposition implied by the model. In particular, log output and log consumption are assumed to follow a deterministic linear trend, which is estimated and removed from the data prior to estimation. The detrended series are then centered to ensure zero sample mean. As a result, the variables entering the likelihood correspond to stationary deviations from the deterministic growth path, consistently with the model’s notion of balanced growth.   
+\smallskip
+The Bayesian estimation builds directly on the results obtained in the previous section. Parameter values and admissible ranges are chosen to be consistent with the SMM analysis, which provides a natural benchmark for the calibration of priors and initial conditions. 
+\section{Results}
+\subsection{Priors}
+Figure \ref{fig:B1} displays the prior distributions for the structural parameters. The priors for the shock volatilities $\sigma_{\eta_A}$ and $\sigma_{\eta_G}$ are positively skewed and concentrated near zero, reflecting standard assumptions of small but non-negligible shocks. The persistence parameters $\rho_A$ and $\rho_G$ are defined on the unit interval, with prior mass centered on highly persistent processes.
+\subsection{Prior \emph{vs} Posterior}
+Figure \ref{fig:B2} compares prior and posterior distributions for the estimated parameters. The posterior distributions of the shock volatilities $\sigma_{\eta_A}$ and $\sigma_{\eta_G}$ are sharply concentrated and substantially tighter than their respective priors, indicating that the data are highly informative about the magnitude of the shocks. The posterior distribution of $\rho_A$ is tightly concentrated near the upper bound of the parameter space, reflecting a strong preference of the likelihood for a highly persistent technology shock process. By contrast, the posterior for $\rho_G$ is well defined and centered away from the boundary, suggesting that the persistence of government spending shocks is more precisely pinned down at an interior value.
+\subsection{Technology and government spending shocks}
+Figure \ref{fig:B3} reports the estimated realizations of the technology and government spending shocks. Both shocks fluctuate around zero, as implied by the detrending and normalization, and display persistent dynamics consistent with AR(1) processes. The technology shock exhibits more pronounced medium-run movements, while the government shock evolves more smoothly over time.
+\subsection{Model \emph{vs} Data Series}
+Figure \ref{fig:B4} compares the detrended data series ($g_y$, $g_c$) with their model-implied counterparts. The simulated paths closely track the cyclical behavior of output and consumption, indicating that the estimated model captures well the low-frequency dynamics and comovement patterns observed in the data.
+\subsection{Output fluctuation decomposition}
+Figure \ref{fig:B5} decomposes output fluctuations into the contributions of technology shocks, government spending shocks, and initial conditions. Technology shocks account for the largest share of business-cycle movements, especially during prolonged expansions and contractions. Government shocks play a secondary but non-negligible role, contributing mainly at medium frequencies. The impact of initial conditions is relevant only at the beginning of the sample and quickly fades over time. Overall, the decomposition confirms the dominant role of technology shocks in driving output dynamics in the model.
+\subsection{Consumption fluctuation decomposition}
+Figure \ref{fig:B6} provides an alternative decomposition of output fluctuations into technology shocks, government spending shocks, and initial conditions. Relative to the previous specification, technology shocks remain the dominant driver of business-cycle dynamics, particularly during the expansionary phase in the middle of the sample. Government shocks contribute more visibly at low frequencies, though their overall quantitative importance remains limited. Initial conditions matter only at the beginning of the sample and rapidly lose relevance. Overall, the decomposition confirms the robustness of the model’s shock transmission mechanism.
+
+
+
+\clearpage
+\begin{figure}[p]
+\centering
+
+\begin{minipage}{0.7\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{Images/M1-1.png}
+\end{minipage}
+\hspace{0.0\linewidth}
+\begin{minipage}{0.21\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{Images/M1-2.png}
+\end{minipage}
+
+\caption{Impulse Response Function}
+\label{fig:M1}
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\linewidth]{Images/data.png}
+    \caption{ Interest Rate and First Differences of Log GDP and Log PCE (PCEPI)}
+    \label{fig:data3}
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\linewidth]{Images/SMM_1.png}
+    \caption{SMM: estimate results}
+    \label{fig:minn}
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{Images/B1.png}
+    \caption{Priors}
+    \label{fig:B1}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{Images/B2.png}
+    \caption{Priors \emph{vs} Posterior}
+    \label{fig:B2}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{Images/B3.png}
+    \caption{Technology and government spending shocks}
+    \label{fig:B3}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{Images/B4.png}
+    \caption{Model \emph{vs} Data Series}
+    \label{fig:B4}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{Images/B5.png}
+    \caption{Output fluctuation decomposition}
+    \label{fig:B5}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{Images/B6.png}
+    \caption{Consumption fluctuation decomposition}
+    \label{fig:B6}
+\end{figure}
+
+\end{document}
